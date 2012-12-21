@@ -4,11 +4,8 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -88,20 +85,11 @@ public abstract class EventModel<T> implements IModel<T> {
         throw new IllegalStateException("Can't access page from " + handler);
     }
 
-    public void bind(final Component... components) {
-        for (final Component c : components) {
-            c.setOutputMarkupId(true);
-            c.add(new Behavior() {
-                @Override
-                public void onEvent(Component component, IEvent<?> event) {
-                    if (event.getPayload() instanceof ModelChangedEvent) {
-                        ModelChangedEvent evt = (ModelChangedEvent) event.getPayload();
-                        if (evt.getEventClass().equals(EventModel.this.getClass())) {
-                            RequestCycle.get().find(AjaxRequestTarget.class).add(c);
-                        }
-                    }
-                }
-            });
+    public void bind(Component... components) {
+        EventModelBehavior behavior = new EventModelBehavior(getClass());
+        for (Component c : components) {
+            c.setOutputMarkupPlaceholderTag(true);
+            c.add(behavior);
         }
     }
 
