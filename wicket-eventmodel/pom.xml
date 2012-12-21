@@ -15,6 +15,7 @@
     <properties>
         <wicket.version>6.4.0</wicket.version>
         <jetty.version>7.5.0.v20110901</jetty.version>
+        <slf4j.version>1.7.2</slf4j.version>
     </properties>
     <dependencies>
         <dependency>
@@ -27,6 +28,12 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>13.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
 
         <dependency>
