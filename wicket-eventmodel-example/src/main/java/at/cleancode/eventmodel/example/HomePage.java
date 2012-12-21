@@ -57,14 +57,24 @@ public class HomePage extends WebPage {
         };
 
         // gets automatically updated when the underlying model changes
-        Label count = new Label("count", new ReferenceModel<Integer, List<Person>>(model) {
+        ReferenceModel<Integer, List<Person>> countModel = new ReferenceModel<Integer, List<Person>>(model) {
+            @Override
             public Integer getObject() {
                 return getReferenceModelObject().size();
+            }
+        };
+        Label count = new Label("count", countModel);
+
+        // gets automatically updated when the underlying model changes
+        Label hasPersons = new Label("hasPersons", new ReferenceModel<Boolean, Integer>(countModel) {
+            @Override
+            public Boolean getObject() {
+                return getReferenceModelObject() != 0;
             }
         });
 
         personsContainer.add(persons);
-        add(personsContainer, add, count);
+        add(personsContainer, add, count, hasPersons);
     }
 
 }
