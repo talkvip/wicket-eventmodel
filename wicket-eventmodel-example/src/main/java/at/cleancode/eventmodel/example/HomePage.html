@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:w="http://wicket.apache.org">
+    <head>
+        <title>Wicket EventModel</title>
+    </head>
+    <body>
+        <h1>Persons</h1>
+
+        Count: <span w:id="count" /><br>
+
+        <a w:id="add">add</a>
+
+        <ul w:id="personsContainer">
+            <li w:id="persons">
+                <w:container w:id="name" />
+                <a w:id="rename">rename</a>
+                <a w:id="remove">delete</a>
+            </li>
+        </ul>
+    </body>
+</html>
