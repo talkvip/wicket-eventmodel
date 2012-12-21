@@ -1,8 +1,5 @@
 package at.cleancode.eventmodel;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
@@ -14,7 +11,9 @@ public class EventModelBehavior extends Behavior {
 
     private final Class<? extends EventModel> modelClass;
 
-    private final Set<Component> components = new HashSet<Component>();
+    private Component component;
+
+    private transient Object oldValue;
 
     public EventModelBehavior(Class<? extends EventModel> modelClass) {
         this.modelClass = modelClass;
@@ -22,7 +21,10 @@ public class EventModelBehavior extends Behavior {
 
     @Override
     public void bind(Component component) {
-        components.add(component);
+        if (this.component != null && !this.component.equals(component)) {
+            throw new IllegalStateException(getClass().getSimpleName() + " can only be bound to one component");
+        }
+        this.component = component;
     }
 
     @Override
@@ -30,15 +32,17 @@ public class EventModelBehavior extends Behavior {
         if (event.getPayload() instanceof ModelChangedEvent) {
             ModelChangedEvent evt = (ModelChangedEvent) event.getPayload();
             if (evt.getEventClass().equals(modelClass)) {
-                for (Component c : components) {
-                    update(c);
-                }
+                update();
             }
         }
     }
 
-    private void update(Component c) {
-        RequestCycle.get().find(AjaxRequestTarget.class).add(c);
+    private void update() {
+        Object currentValue = component.getDefaultModelObject();
+        if (oldValue == null || !oldValue.equals(currentValue)) {
+            oldValue = currentValue;
+            RequestCycle.get().find(AjaxRequestTarget.class).add(component);
+        }
     }
 
 }

@@ -86,10 +86,9 @@ public abstract class EventModel<T> implements IModel<T> {
     }
 
     public void bind(Component... components) {
-        EventModelBehavior behavior = new EventModelBehavior(getClass());
         for (Component c : components) {
             c.setOutputMarkupPlaceholderTag(true);
-            c.add(behavior);
+            c.add(new EventModelBehavior(getClass()));
         }
     }
 
