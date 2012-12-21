@@ -44,10 +44,10 @@ public class EventModelBehavior extends Behavior {
     private void update() {
         Object currentValue = component.getDefaultModelObject();
         if (oldValue == null || !oldValue.equals(currentValue)) {
-            oldValue = currentValue;
             RequestCycle.get().find(AjaxRequestTarget.class).add(component);
             log.debug("Updating component '{}': Old value: '{}', new value: '{}'", component.getPath(), oldValue,
                     currentValue);
+            oldValue = currentValue;
         } else {
             log.debug("The value for component '{}' didn't change ('{}')", component.getPath(), currentValue);
         }
